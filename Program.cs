@@ -9,7 +9,6 @@ namespace MiniBankSystemProjectOverview
     {
         // ______Inserting constants that do not change________
         const double MinimumBalance = 100.0;
-        const int MaxLoginAttempts = 5;
         const string AccountsFilePath = "accounts.txt";
         const string ReviewsFilePath = "reviews.txt";
 
@@ -76,7 +75,7 @@ namespace MiniBankSystemProjectOverview
         static void UserMenu()
         {
             bool inUserMenu = true;
-
+            const int MaxLoginAttempts = 5;
             while (inUserMenu)
             {
                 Console.Clear();
@@ -181,8 +180,62 @@ namespace MiniBankSystemProjectOverview
             Console.WriteLine($"Account created for {name} with Account Number: {newAccountNumber}");
         }
 
+        static void Deposit()
+        {
+            int index = GetAccountIndex();
+            if (index == -1) return;
 
+            try
+            {
+                Console.Write("Enter deposit amount: ");
+                double amount = Convert.ToDouble(Console.ReadLine());
 
+                if (amount <= 0)
+                {
+                    Console.WriteLine("Amount must be positive.");
+                    return;
+                }
+
+                balances[index] += amount;
+                Console.WriteLine("Deposit successful.");
+            }
+            catch
+            {
+                Console.WriteLine("Invalid amount.");
+            }
+        }
+
+        static void Withdraw()
+        {
+            int index = GetAccountIndex();
+            if (index == -1) return;
+
+            try
+            {
+                Console.Write("Enter withdrawal amount: ");
+                double amount = Convert.ToDouble(Console.ReadLine());
+
+                if (amount <= 0)
+                {
+                    Console.WriteLine("Amount must be positive.");
+                    return;
+                }
+
+                if (balances[index] - amount >= MinimumBalance)
+                {
+                    balances[index] -= amount;
+                    Console.WriteLine("Withdrawal successful.");
+                }
+                else
+                {
+                    Console.WriteLine("Insufficient balance after minimum limit.");
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Invalid amount.");
+            }
+        }
 
 
 
