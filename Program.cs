@@ -104,9 +104,35 @@ namespace MiniBankSystemProjectOverview
             }
         }
 
+        // ==========  Addition The  Function Types Of The  Admin Menu==========
 
+        static void AdminMenu()
+        {
+            bool inAdminMenu = true;
 
+            while (inAdminMenu)
+            {
+                Console.Clear();
+                Console.WriteLine("\n------ Admin Menu ------");
+                Console.WriteLine("1. Process Next Account Request");
+                Console.WriteLine("2. View Submitted Reviews");
+                Console.WriteLine("3. View All Accounts");
+                Console.WriteLine("4. View Pending Account Requests");
+                Console.WriteLine("0. Return to Main Menu");
+                Console.Write("Select option: ");
+                string adminChoice = Console.ReadLine();
 
+                switch (adminChoice)
+                {
+                    case "1": ProcessNextAccountRequest(); break;
+                    case "2": ViewReviews(); break;
+                    case "3": ViewAllAccounts(); break;
+                    case "4": ViewPendingRequests(); break;
+                    case "0": inAdminMenu = false; break;
+                    default: Console.WriteLine("Invalid choice."); break;
+                }
+            }
+        }
 
 
 
