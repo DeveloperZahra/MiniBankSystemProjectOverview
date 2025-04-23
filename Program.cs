@@ -9,6 +9,35 @@
         const string AccountsFilePath = "accounts.txt";
         const string ReviewsFilePath = "reviews.txt";
 
+
+        // ______Global lists (parallel)_______
+        static List<int> accountNumbers = new List<int>();
+        static List<string> accountNames = new List<string>();
+        static List<double> balances = new List<double>();
+        static List<string> Passward = new List<string>();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }
 
