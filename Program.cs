@@ -17,6 +17,11 @@
         static List<string> Passward = new List<string>();
 
 
+        // _____Queues and Stacks______
+
+        static Queue<string> createAccountRequests = new Queue<string>(); // format: "Name|NationalID"
+        static Stack<string> reviewsStack = new Stack<string>();// To show the data 
+
 
 
 
