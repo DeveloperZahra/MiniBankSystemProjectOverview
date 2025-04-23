@@ -56,8 +56,7 @@ namespace MiniBankSystemProjectOverview
                         case "1": UserMenu(); break;
                         case "2": AdminMenu(); break;
                         case "3": EmployeeMenu(); break;
-                        case "0": ExitTheSystem(); break;
-
+                        case "0":
                             SaveAccountsInformationToFile();
                             SaveReviews();
                             running = false; //____Keep running  false to repeat the loop____
@@ -120,6 +119,7 @@ namespace MiniBankSystemProjectOverview
                 Console.WriteLine("2. View Submitted Reviews");
                 Console.WriteLine("3. View All Accounts");
                 Console.WriteLine("4. View Pending Account Requests");
+                Console.WriteLine("5. Handle customer complaints");
                 Console.WriteLine("0. Return to Main Menu");
                 Console.Write("Select option: ");
                 string adminChoice = Console.ReadLine();
@@ -130,42 +130,31 @@ namespace MiniBankSystemProjectOverview
                     case "2": ViewReviews(); break;
                     case "3": ViewAllAccounts(); break;
                     case "4": ViewPendingRequests(); break;
+                    case "5": HandleCustomerComplaints(); break;
                     case "0": inAdminMenu = false; break;
                     default: Console.WriteLine("Invalid choice."); break;
                 }
             }
         }
 
-        // ==========  Addition The  Function Types Of The Employee  Menu==========
-
-        static void EmployeeMenu()
+        static void RequestAccountCreation()
         {
-            bool inAdminMenu = true;
+            Console.Write("Enter Your Full name: ");
+            string name = Console.ReadLine();
 
-            while (inAdminMenu)
-            {
-                Console.Clear();
-                Console.WriteLine("\n------ Employee Menu ------");
-                Console.WriteLine("1. View customer account information");
-                Console.WriteLine("2. Update account details");
-                Console.WriteLine("3. Assist with account creation");
-                Console.WriteLine("4. Handle customer complaints");
-                Console.WriteLine("0. Return to Main Menu");
-                Console.Write("Select option: ");
-                string adminChoice = Console.ReadLine();
+            Console.Write("Enter Your National ID: ");
+            string nationalID = Console.ReadLine();
 
-                switch (adminChoice)
-                {
-                    case "1": ViewCustomerAccountInformation(); break;
-                    case "2": UpdateAccountDetails(); break;
-                    case "3": AssistWithAccountCreation(); break;
-                    case "4": HandleCustomerComplaints(); break;
-                    case "0": inAdminMenu = false; break;
-                    default: Console.WriteLine("Invalid choice."); break;
-                }
-            }
+            string request = name + "|" + nationalID;
+
+            //Queue<string> queue = new Queue<string>();
+            //queue.Enqueue(request);// we do not add a queue heer , because added in the internal calsses for if need used in a multiy bald function 
+
+            //createAccountRequests.Enqueue((name, nationalID));
+            createAccountRequests.Enqueue(request);
+
+            Console.WriteLine("Your account request has been submitted.");
         }
-
 
 
 
