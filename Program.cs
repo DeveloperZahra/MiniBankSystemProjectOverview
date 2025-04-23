@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reflection.Metadata;
+using System.Security.Principal;
 
 namespace MiniBankSystemProjectOverview
 {
@@ -134,9 +136,35 @@ namespace MiniBankSystemProjectOverview
             }
         }
 
+        // ==========  Addition The  Function Types Of The Employee  Menu==========
 
+        static void EmployeeMenu()
+        {
+            bool inAdminMenu = true;
 
+            while (inAdminMenu)
+            {
+                Console.Clear();
+                Console.WriteLine("\n------ Employee Menu ------");
+                Console.WriteLine("1. View customer account information");
+                Console.WriteLine("2. Update account details");
+                Console.WriteLine("3. Assist with account creation");
+                Console.WriteLine("4. Handle customer complaints");
+                Console.WriteLine("0. Return to Main Menu");
+                Console.Write("Select option: ");
+                string adminChoice = Console.ReadLine();
 
+                switch (adminChoice)
+                {
+                    case "1": ViewCustomerAccountInformation(); break;
+                    case "2": UpdateAccountDetails(); break;
+                    case "3": AssistWithAccountCreation(); break;
+                    case "4": HandleCustomerComplaints(); break;
+                    case "0": inAdminMenu = false; break;
+                    default: Console.WriteLine("Invalid choice."); break;
+                }
+            }
+        }
 
 
 
