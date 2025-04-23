@@ -156,7 +156,30 @@ namespace MiniBankSystemProjectOverview
             Console.WriteLine("Your account request has been submitted.");
         }
 
+        static void ProcessNextAccountRequest()
+        {
+            if (createAccountRequests.Count == 0)
+            {
+                Console.WriteLine("No pending account requests.");
+                return;
+            }
 
+            //var (name, nationalID) = createAccountRequests.Dequeue();
+            string request = createAccountRequests.Dequeue();
+            string[] parts = request.Split('|');
+            string name = parts[0];
+            string nationalID = parts[1];
+
+            int newAccountNumber = lastAccountNumber + 1;
+
+            accountNumbers.Add(newAccountNumber);
+            accountNames.Add($"{name} ");
+            balances.Add(0.0);
+
+            lastAccountNumber = newAccountNumber;
+
+            Console.WriteLine($"Account created for {name} with Account Number: {newAccountNumber}");
+        }
 
 
 
