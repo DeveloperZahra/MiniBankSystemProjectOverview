@@ -23,6 +23,8 @@
         static Stack<string> reviewsStack = new Stack<string>();// To show the data 
 
 
+        // _____Account number generator_____
+        static int lastAccountNumber;
 
 
 
