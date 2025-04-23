@@ -236,7 +236,15 @@ namespace MiniBankSystemProjectOverview
                 Console.WriteLine("Invalid amount.");
             }
         }
+        static void ViewBalance()
+        {
+            int index = GetAccountIndex();
+            if (index == -1) return;
 
+            Console.WriteLine($"Account Number: {accountNumbers[index]}");
+            Console.WriteLine($"Holder Name: {accountNames[index]}");
+            Console.WriteLine($"Current Balance: {balances[index]}");
+        }
 
 
 
