@@ -143,7 +143,121 @@ namespace MiniBankSystemProjectOverview
             }
         }
 
+        static void ProcessNextAccountRequest()
+        {
+            if (createAccountRequests.Count == 0)
+            {
+                Console.WriteLine("No pending account requests.");
+                return;
+            }
 
+            //var (name, nationalID) = createAccountRequests.Dequeue();
+            string request = createAccountRequests.Dequeue();
+            string[] parts = request.Split('|');
+            string name = parts[0];
+            string nationalID = parts[1];
+
+            int newAccountNumber = lastAccountNumber + 1;
+
+            accountNumbers.Add(newAccountNumber);
+            accountNames.Add($"{name} ");
+            balances.Add(0.0);
+
+            lastAccountNumber = newAccountNumber;
+
+            Console.WriteLine($"Account created for {name} with Account Number: {newAccountNumber}");
+        }
+
+        static void Deposit()
+        {
+            int index = GetAccountIndex();
+            if (index == -1) return;
+
+            try
+            {
+                Console.Write("Enter deposit amount: ");
+                double amount = Convert.ToDouble(Console.ReadLine());
+
+                if (amount <= 0)
+                {
+                    Console.WriteLine("Amount must be positive.");
+                    return;
+                }
+
+                balances[index] += amount;
+                Console.WriteLine("Deposit successful.");
+            }
+            catch
+            {
+                Console.WriteLine("Invalid amount.");
+            }
+        }
+
+        static void Withdraw()
+        {
+            int index = GetAccountIndex();
+            if (index == -1) return;
+
+            try
+            {
+                Console.Write("Enter withdrawal amount: ");
+                double amount = Convert.ToDouble(Console.ReadLine());
+
+                if (amount <= 0)
+                {
+                    Console.WriteLine("Amount must be positive.");
+                    return;
+                }
+
+                if (balances[index] - amount >= MinimumBalance)
+                {
+                    balances[index] -= amount;
+                    Console.WriteLine("Withdrawal successful.");
+                }
+                else
+                {
+                    Console.WriteLine("Insufficient balance after minimum limit.");
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Invalid amount.");
+            }
+        }
+        static void ViewBalance()
+        {
+            int index = GetAccountIndex();
+            if (index == -1) return;
+
+            Console.WriteLine($"Account Number: {accountNumbers[index]}");
+            Console.WriteLine($"Holder Name: {accountNames[index]}");
+            Console.WriteLine($"Current Balance: {balances[index]}");
+        }
+
+        static void SaveAccountsInformationToFile()
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(AccountsFilePath))//Through it we create the object to write to the file
+                {
+                    for (int i = 0; i < accountNumbers.Count; i++)
+                    {
+                        string dataLine = $"{accountNumbers[i]},{accountNames[i]},{balances[i]}";
+                        writer.WriteLine(dataLine);
+                    }
+                }
+                Console.WriteLine("Accounts saved successfully.");
+            }
+            catch
+            {
+                Console.WriteLine("Error saving file.");
+            }
+        }
+
+
+
+
+        }
 
 
 
