@@ -1,38 +1,19 @@
 ﻿using System;
 using System.Reflection.Metadata;
 using System.Security.Principal;
+using System.Text.RegularExpressions;
 
 namespace MiniBankSystemProjectOverview
 {
     internal class Program
 
     {
-        // ______Inserting constants that do not change________
-        const double MinimumBalance = 100.0;
-        const string AccountsFilePath = "accounts.txt";
-        const string ReviewsFilePath = "reviews.txt";
-
-
-        // ______Global lists (parallel)_______
-        static List<int> accountNumbers = new List<int>();
-        static List<string> accountNames = new List<string>();
-        static List<double> balances = new List<double>();
-        
-
-
-        // _____Queues and Stacks______
 
         static Queue<string> createAccountRequests = new Queue<string>(); // format: "Name|NationalID"
-        static Stack<string> reviewsStack = new Stack<string>();// To show the data 
-
-
-        // _____Account number generator_____
-        static int lastAccountNumber;
-
         static void Main(string[] args)
         {
-            LoadAccountsInformationFromFile();
-            LoadReviews();
+            //LoadAccountsInformationFromFile();
+            //LoadReviews();
 
             // _______main menu for system bank to store user choice in avriable _______
             bool running = true;
@@ -45,7 +26,6 @@ namespace MiniBankSystemProjectOverview
                     Console.WriteLine("\n====== Welcome To Bank System ======");
                     Console.WriteLine("1. User Menu");
                     Console.WriteLine("2. Admin Menu");
-                    Console.WriteLine("3. Employee Menu");
                     Console.WriteLine("0. Exit the system");
                     Console.Write(" Please Select Your Option: ");
                     string mainChoice = Console.ReadLine();
@@ -54,11 +34,10 @@ namespace MiniBankSystemProjectOverview
                     {
                         case "1": UserMenu(); break;
                         case "2": AdminMenu(); break;
-                        case "3": EmployeeMenu(); break;
                         case "0":
-                            SaveAccountsInformationToFile();
-                            SaveReviews();
-                            running = false; //____Keep running  false to repeat the loop____
+                            //SaveAccountsInformationToFile();
+                            //SaveReviews();
+                            running = false; //____Keep running  false to repeat the loop____   
                             break;
                         default: Console.WriteLine("Invalid choice."); break;
                     }
@@ -75,7 +54,7 @@ namespace MiniBankSystemProjectOverview
         static void UserMenu()
         {
             bool inUserMenu = true;
-            const int MaxLoginAttempts = 5;
+            //const int MaxLoginAttempts = 5;
             while (inUserMenu)
             {
                 Console.Clear();
@@ -85,7 +64,6 @@ namespace MiniBankSystemProjectOverview
                 Console.WriteLine("3. Withdraw");
                 Console.WriteLine("4. View Balance");
                 Console.WriteLine("5. Submit Review/Complaint");
-                Console.WriteLine("6. Manage personal details");
                 Console.WriteLine("0. Return to Main Menu");
                 Console.Write("Select option: ");
                 string userChoice = Console.ReadLine();
@@ -93,11 +71,10 @@ namespace MiniBankSystemProjectOverview
                 switch (userChoice)
                 {
                     case "1": RequestAccountCreation(); break;
-                    case "2": Deposit(); break;
-                    case "3": Withdraw(); break;
-                    case "4": ViewBalance(); break;
-                    case "5": SubmitReview(); break;
-                    case "6": Managepersonaldetails(); break;
+                    //case "2": Deposit(); break;
+                    //case "3": Withdraw(); break;
+                    //case "4": ViewBalance(); break;
+                    //case "5": SubmitReview(); break;
                     case "0": inUserMenu = false; break;
                     default: Console.WriteLine("Invalid choice."); break;
                 }
@@ -118,133 +95,152 @@ namespace MiniBankSystemProjectOverview
                 Console.WriteLine("2. View Submitted Reviews");
                 Console.WriteLine("3. View All Accounts");
                 Console.WriteLine("4. View Pending Account Requests");
-                Console.WriteLine("5. Handle customer complaints");
                 Console.WriteLine("0. Return to Main Menu");
                 Console.Write("Select option: ");
                 string adminChoice = Console.ReadLine();
 
                 switch (adminChoice)
                 {
-                    case "1": ProcessNextAccountRequest(); break;
-                    case "2": ViewReviews(); break;
-                    case "3": ViewAllAccounts(); break;
-                    case "4": ViewPendingRequests(); break;
-                    case "5": HandleCustomerComplaints(); break;
-                    case "0": inAdminMenu = false; break;
+                    //case "1": ProcessNextAccountRequest(); break;
+                    //case "2": ViewReviews(); break;
+                    //case "3": ViewAllAccounts(); break;
+                    //case "4": ViewPendingRequests(); break;
+                    case "0": inAdminMenu = false; break; // this will Eixt the  loop and return
                     default: Console.WriteLine("Invalid choice."); break;
                 }
             }
         }
-
+        // ========== User features function ==========
+        //_______________Request account creation (1) ______
         static void RequestAccountCreation()
         {
-            Console.Write("Enter Your Full name: ");
-            string name = Console.ReadLine();
-
-            Console.Write("Enter Your National ID: ");
-            string nationalID = Console.ReadLine();
-
-            string request = name + "|" + nationalID;
-
-            //Queue<string> queue = new Queue<string>();
-            //queue.Enqueue(request);// we do not add a queue heer , because added in the internal calsses for if need used in a multiy bald function 
-
-            //createAccountRequests.Enqueue((name, nationalID));
-            createAccountRequests.Enqueue(request);
-
-            Console.WriteLine("Your account request has been submitted.");
-        }
-
-        static void ProcessNextAccountRequest()
-        {
-            if (createAccountRequests.Count == 0)
-            {
-                Console.WriteLine("No pending account requests.");
-                return;
-            }
-
-            //var (name, nationalID) = createAccountRequests.Dequeue();
-            string request = createAccountRequests.Dequeue();
-            string[] parts = request.Split('|');
-            string name = parts[0];
-            string nationalID = parts[1];
-
-            int newAccountNumber = lastAccountNumber + 1;
-
-            accountNumbers.Add(newAccountNumber);
-            accountNames.Add($"{name} ");
-            balances.Add(0.0);
-
-            lastAccountNumber = newAccountNumber;
-
-            Console.WriteLine($"Account created for {name} with Account Number: {newAccountNumber}");
-        }
-
-        static void Deposit()
-        {
-            int index = GetAccountIndex();
-            if (index == -1) return;
-
+            //  Adding  Error Handling
             try
             {
-                Console.Write("Enter deposit amount: ");
-                double amount = Convert.ToDouble(Console.ReadLine());
+                Console.Write("Enter Your Full name: ");
+                string name = Console.ReadLine();
+                // valid the Name
+                string ValidName = stringOnlyLetterValidation(name);
 
-                if (amount <= 0)
-                {
-                    Console.WriteLine("Amount must be positive.");
-                    return;
-                }
+                Console.Write("Enter Your National ID: ");
+                string nationalID = Console.ReadLine();
+                // valid the national ID
+                string ValidID = stringOnlyLetterValidation(nationalID);
 
-                balances[index] += amount;
-                Console.WriteLine("Deposit successful.");
+                string request = ValidName + "|" + ValidID;
+
+                //Queue<string> queue = new Queue<string>();
+                //queue.Enqueue(request);// we do not add a queue heer , because added in the internal calsses for if need used in a multiy bald function 
+
+                //createAccountRequests.Enqueue((name, nationalID));
+                createAccountRequests.Enqueue(request);
+
+                Console.WriteLine("Your account request has been submitted.");
             }
             catch
             {
-                Console.WriteLine("Invalid amount.");
+                Console.WriteLine("Warring.. Request is not submited!");
             }
         }
 
-        static void Withdraw()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //========== valadition ==========
+
+        // string validation__________________ 
+        public static string stringOnlyLetterValidation(string word)
         {
-            int index = GetAccountIndex();
-            if (index == -1) return;
-
-            try
+            bool IsValid = true;
+            string ValidWord = "";
+            if (string.IsNullOrEmpty(word) && word.All(char.IsLetter))
             {
-                Console.Write("Enter withdrawal amount: ");
-                double amount = Convert.ToDouble(Console.ReadLine());
+                Console.WriteLine("Input is just empty!");
+                IsValid = false;
 
-                if (amount <= 0)
-                {
-                    Console.WriteLine("Amount must be positive.");
-                    return;
-                }
-
-                if (balances[index] - amount >= MinimumBalance)
-                {
-                    balances[index] -= amount;
-                    Console.WriteLine("Withdrawal successful.");
-                }
-                else
-                {
-                    Console.WriteLine("Insufficient balance after minimum limit.");
-                }
             }
-            catch
+            else
             {
-                Console.WriteLine("Invalid amount.");
+                IsValid = true;
             }
+
+            if (Regex.IsMatch(word, @"^[a-zA-Z]+$"))
+            {
+                Console.WriteLine("Valid: only letters.");
+                IsValid = true;
+            }
+            else
+            {
+                Console.WriteLine("Invalid: contains non-letter characters.");
+                IsValid = false;
+            }
+
+            if (IsValid)
+            {
+                ValidWord = word;
+            }
+            else
+            {
+                Console.WriteLine("word unsaved");
+            }
+            return ValidWord;
         }
-        static void ViewBalance()
+        // validate numeric strting
+        public static string StringWithNumberValidation(string word)
         {
-            int index = GetAccountIndex();
-            if (index == -1) return;
+            bool IsValid = true;
+            string ValidWord = "";
+            if (string.IsNullOrWhiteSpace(word))
+            {
+                Console.WriteLine("Input is just spaces or empty!");
+                IsValid = false;
 
-            Console.WriteLine($"Account Number: {accountNumbers[index]}");
-            Console.WriteLine($"Holder Name: {accountNames[index]}");
-            Console.WriteLine($"Current Balance: {balances[index]}");
+            }
+            else
+            {
+                IsValid = true;
+            }
+            if (Regex.IsMatch(word, @"^\d+$"))
+            {
+                Console.WriteLine("Valid: only numbers.");
+                IsValid = true;
+
+            }
+            else
+            {
+                Console.WriteLine("Invalid: contains non-numeric characters.");
+                IsValid = false;
+            }
+            if (IsValid)
+            {
+                ValidWord = word;
+            }
+            else
+            {
+                Console.WriteLine("word unsaved! try agine");
+            }
+            return ValidWord;
         }
+
+
+
+
 
 
 
