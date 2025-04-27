@@ -31,7 +31,7 @@ namespace MiniBankSystemProjectOverview
         {
            LoadAccountsInformationFromFile();//This function makes the program retrieve all previous calculations from a text file and prepare them for operation while it runs.
                
-            //LoadReviews();
+            LoadReviews();//Read reviews from the file and refill them in the stack.
 
             // _______main menu for system bank to store user choice in avriable _______
             bool running = true;
@@ -54,7 +54,7 @@ namespace MiniBankSystemProjectOverview
                         case "2": AdminMenu(); break;
                         case "0":
                             SaveAccountsInformationToFile();// This saves all account data to a text file in an organized and secure manner.
-                            //SaveReviews();
+                            SaveReviews();//All revisions in a stack are saved in a text file.
                             running = false; //____Keep running  false to repeat the loop____   
                             break;
                         default: Console.WriteLine("Invalid choice."); break;
@@ -398,8 +398,45 @@ namespace MiniBankSystemProjectOverview
             }
         }
 
+        //__________save reviews (3)____________
+        static void SaveReviews()
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(ReviewsFilePath))//We create a StreamWriter object to write text to a file, the file is specified via the ReviewsFilePath variable (it must be predefined, e.g. its value could be "reviews.txt").
+                {
+                    foreach (var review in reviewsStack)//We start a foreach loop that goes through all the reviews inside reviewsStack, where each review is stored in the review variable.
+                    {
+                        writer.WriteLine(review);//We write each review as a separate line within the file using WriteLine ،That is, each review is placed on its own line.
+                    }
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Error saving reviews.");
+            }
+        }
+        //____________load reviews (4)_______
+        static void LoadReviews()
+        {
+            try//We start a try block to safely load revisions and if anything goes wrong (such as the file not existing or the read failed), we move to a catch block.
+            {
+                if (!File.Exists(ReviewsFilePath)) return;//We check: If the file in the path ReviewsFilePath does not exist, we exit the function directly (we do not try to read).
 
-
+                using (StreamReader reader = new StreamReader(ReviewsFilePath))//We create a StreamReader object to open the file for reading.
+                {
+                    string line;//We define a line variable to read each line of the file one by one.
+                    while ((line = reader.ReadLine()) != null)//While loop: As long as there is a new line in the file (we haven't reached the end), we read it،ReadLine() reads one line at a time.
+                    {
+                        reviewsStack.Push(line); //We take the read line and push it to the reviewsStack stack using push, meaning we add it as a new item at the top.
+                    }
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Error loading reviews.");
+            }
+        }
 
 
 
