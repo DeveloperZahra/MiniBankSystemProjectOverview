@@ -10,7 +10,7 @@ namespace MiniBankSystemProjectOverview
     {
         // _______Constants_________
         const double MinimumBalance = 100.0;
-        
+        const string AccountsFilePath = "accounts.txt";
 
         // ____Global lists (parallel)______
         static List<int> accountNumbers = new List<int>();
@@ -23,7 +23,7 @@ namespace MiniBankSystemProjectOverview
         static Queue<string> createAccountRequests = new Queue<string>(); // format: "Name|NationalID"
         static void Main(string[] args)
         {
-            //LoadAccountsInformationFromFile();
+           LoadAccountsInformationFromFile();//This saves all account data to a text file in an organized and secure manner.
             //LoadReviews();
 
             // _______main menu for system bank to store user choice in avriable _______
@@ -46,7 +46,7 @@ namespace MiniBankSystemProjectOverview
                         case "1": UserMenu(); break;
                         case "2": AdminMenu(); break;
                         case "0":
-                            //SaveAccountsInformationToFile();
+                            SaveAccountsInformationToFile();
                             //SaveReviews();
                             running = false; //____Keep running  false to repeat the loop____   
                             break;
@@ -253,8 +253,67 @@ namespace MiniBankSystemProjectOverview
             Console.WriteLine($"Current Balance: {balances[index]}");//This prints the current balance of the account selected by the user.
         }
 
+        static void SaveAccountsInformationToFile()
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(AccountsFilePath))//Open a file using StreamWriter, the file path is specified via a variable named AccountsFilePath and using here ensures that the file will be closed automatically after completion.
+                {
+                    for (int i = 0; i < accountNumbers.Count; i++)//Here starts the for loop to iterate over all the accounts stored in the lists.
+                    {
+                        string dataLine = $"{accountNumbers[i]},{accountNames[i]},{balances[i]}";
+                        writer.WriteLine(dataLine);//The dataLine we prepared is written inside the file as a new line.
+                    }
+                }
+                Console.WriteLine("Accounts saved successfully.");
+            }
+            catch
+            {
+                Console.WriteLine("Error saving file.");
+            }
+        }
 
+        static void LoadAccountsInformationFromFile()
+        {
+            try
+            {
+                if (!File.Exists(AccountsFilePath))//First, it checks whether the file specified in AccountsFilePath exists. If it doesn't, it prints a message "No saved data found" and terminates the function (return)
+                {
+                    Console.WriteLine("No saved data found.");
+                    return;
+                }
+                //Before loading new data, it flushes the lists: deleting all accounts, names, and balances in memory (to prevent duplicate data when reloading)
+                accountNumbers.Clear();
+                accountNames.Clear();
+                balances.Clear();
+                //transactions.Clear();
 
+                using (StreamReader reader = new StreamReader(AccountsFilePath))//Opens the specified file for reading using the StreamReader. When using is used, ensures that the file is automatically closed when finished.
+                {
+                    //Starts reading the file line by line.In each iteration: reads a new line until it reaches the end of the file(null)
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        string[] parts = line.Split(','); //The line is divided into parts based on the comma (,) Each line is assumed to contain: the account number, then the customer name, then the balance
+                        int accNum = Convert.ToInt32(parts[0]);
+                        accountNumbers.Add(accNum);
+                        accountNames.Add(parts[1]);
+                        balances.Add(Convert.ToDouble(parts[2]));//Converts the first part (the account number) from string to an integer (int)
+
+                        //Verifies: If the current account number is greater than the last account number (lastAccountNumber), the lastAccountNumber is updated to be equal to it. This is useful for correctly assigning new account numbers when creating a new account.
+                        if (accNum > lastAccountNumber)
+                            lastAccountNumber = accNum;
+                    }
+                }
+
+                Console.WriteLine("Accounts loaded successfully.");
+            }
+            catch
+            {
+                Console.WriteLine("Error loading file.");
+            }
+
+        }
 
 
 
