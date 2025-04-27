@@ -23,7 +23,8 @@ namespace MiniBankSystemProjectOverview
         static Queue<string> createAccountRequests = new Queue<string>(); // format: "Name|NationalID"
         static void Main(string[] args)
         {
-           LoadAccountsInformationFromFile();//This saves all account data to a text file in an organized and secure manner.
+           LoadAccountsInformationFromFile();//This function makes the program retrieve all previous calculations from a text file and prepare them for operation while it runs.
+               
             //LoadReviews();
 
             // _______main menu for system bank to store user choice in avriable _______
@@ -46,7 +47,7 @@ namespace MiniBankSystemProjectOverview
                         case "1": UserMenu(); break;
                         case "2": AdminMenu(); break;
                         case "0":
-                            SaveAccountsInformationToFile();
+                            SaveAccountsInformationToFile();// This saves all account data to a text file in an organized and secure manner.
                             //SaveReviews();
                             running = false; //____Keep running  false to repeat the loop____   
                             break;
@@ -114,8 +115,8 @@ namespace MiniBankSystemProjectOverview
                 {
                     case "1": ProcessNextAccountRequest(); break;
                     //case "2": ViewReviews(); break;
-                    //case "3": ViewAllAccounts(); break;
-                    //case "4": ViewPendingRequests(); break;
+                    case "3": ViewAllAccounts(); break;
+                    case "4": ViewPendingRequests(); break;
                     case "0": inAdminMenu = false; break; // this will Eixt the  loop and return
                     default: Console.WriteLine("Invalid choice."); break;
                 }
@@ -314,10 +315,31 @@ namespace MiniBankSystemProjectOverview
             }
 
         }
+        //_____________view all accounts_____
+        static void ViewAllAccounts()//To display data 
+        {
+            Console.WriteLine("\n--- All Accounts ---");//Prints an address to show the user that all accounts will be displayed.
+            for (int i = 0; i < accountNumbers.Count; i++)//Starts a for loop to iterate over all the accounts in the list accountNumbers where i represents the current index in the lists.
+            {
+                Console.WriteLine($"{accountNumbers[i]} - {accountNames[i]} - Balance: {balances[i]}");
+            }
+        }
 
+        static void ViewPendingRequests()
+        {
+            Console.WriteLine("\n--- Pending Account Requests ---");
+            if (createAccountRequests.Count == 0)//Checks whether there are any pending account creation requests. createAccountRequests is a list or queue containing requests.
+            {
+                Console.WriteLine("No pending requests.");//If no requests exist: Prints "No requests are pending." Terminates the function immediately using return
+                return;
+            }
 
-
-
+            foreach (string request in createAccountRequests)//If requests are found, iterates over them one by one using a foreach loop. Each element in createAccountRequests is a string representing a single request.
+            {
+                string[] parts = request.Split('|'); //The request is divided into parts using the separator | and the request is expected to be written in this format: "Customer Name|ID Number"
+                Console.WriteLine($"Name: {parts[0]}, National ID: {parts[1]}");
+            }
+        }
 
 
 
