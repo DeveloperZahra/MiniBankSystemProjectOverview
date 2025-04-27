@@ -120,7 +120,7 @@ namespace MiniBankSystemProjectOverview
                 switch (adminChoice)
                 {
                     case "1": ProcessNextAccountRequest(); break;
-                    //case "2": ViewReviews(); break;
+                    case "2": ViewReviews(); break;
                     case "3": ViewAllAccounts(); break;
                     case "4": ViewPendingRequests(); break;
                     case "0": inAdminMenu = false; break; // this will Eixt the  loop and return
@@ -382,6 +382,26 @@ namespace MiniBankSystemProjectOverview
             reviewsStack.Push(review);//Push pushes text onto the stack (reviewStack). Stacks operate on a last-in, first-out (LIFO) basis.
             Console.WriteLine("Thank you! Your feedback has been recorded.");
         }
+        //__________view reviews (2)___________
+        static void ViewReviews()
+        {
+            if (reviewsStack.Count == 0)//Checks if there are any existing reviews/complaints, reviewsStack.Count is the number of items inside the stack
+            {
+                Console.WriteLine("No reviews or complaints submitted yet.");//If the number of reviews = zero: Prints a message to the user that there are no reviews or complaints and terminates the function immediately (return).
+                return;
+            }
+
+            Console.WriteLine("Recent Reviews/Complaints (most recent first):");//If reviews are found, a caption will be printed indicating that what will be displayed is from newest to oldest.
+            foreach (string r in reviewsStack)//The iteration starts over all the reviews stored in reviewsStack. In each iteration, the variable r contains the text of a single review or complaint.
+            {
+                Console.WriteLine("- " + r);
+            }
+        }
+
+
+
+
+
 
         //========== valadition ==========
 
