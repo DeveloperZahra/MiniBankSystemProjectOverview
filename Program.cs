@@ -8,6 +8,9 @@ namespace MiniBankSystemProjectOverview
 {
     class Program
     {
+        // _______Constants_________
+        const double MinimumBalance = 100.0;
+        
 
         // ____Global lists (parallel)______
         static List<int> accountNumbers = new List<int>();
@@ -79,8 +82,8 @@ namespace MiniBankSystemProjectOverview
                 switch (userChoice)
                 {
                     case "1": RequestAccountCreation(); break;
-                    //case "2": Deposit(); break;
-                    //case "3": Withdraw(); break;
+                    case "2": Deposit(); break;
+                    case "3": Withdraw(); break;
                     //case "4": ViewBalance(); break;
                     //case "5": SubmitReview(); break;
                     case "0": inUserMenu = false; break;
@@ -205,6 +208,39 @@ namespace MiniBankSystemProjectOverview
             }
         }
 
+        //________withdraw (4)_________
+        static void Withdraw()
+        {
+            int index = GetAccountIndex();//Here we call the GetAccountIndex() function to ask the user to enter the account number, then we search for its location in the lists and then we reorder the lists.
+            if (index == -1) return;//If the function returns -1 (i.e., the calculation does not exist or an input error), it exits the Withdraw function directly and does not continue.
+
+            try
+            {
+                Console.Write("Enter withdrawal amount: ");
+                double amount = Convert.ToDouble(Console.ReadLine());
+
+                if (amount <= 0)
+                {
+                    Console.WriteLine("Amount must be positive.");
+                    return;
+                }
+
+                if (balances[index] - amount >= MinimumBalance)//Checks if the current balance - withdrawal amount - is still greater than or equal to the Minimum Balance (the lowest balance allowed in the account). The Minimum Balance may be, for example, 100 riyals, or according to the bank’s policy.
+                {
+                    //If the condition is met: the amount is deducted from the account balance (balances[index] -= amount) and then the message “Withdrawal Successful” is printed.
+                    balances[index] -= amount;
+                    Console.WriteLine("Withdrawal successful.");
+                }
+                else
+                { //If the condition is not met (i.e. the debit will be lowered to the account than the minimum allowed), the message “Insufficient balance after deducting the minimum” will be printed.
+                    Console.WriteLine("Insufficient balance after minimum limit.");
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Invalid amount.");
+            }
+        }
 
 
 
@@ -231,7 +267,7 @@ namespace MiniBankSystemProjectOverview
 
 
 
-
+        //_________Get Account Index____________
         static int GetAccountIndex()
         {
             Console.Write("Enter account number: ");
