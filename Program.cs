@@ -84,7 +84,7 @@ namespace MiniBankSystemProjectOverview
                     case "1": RequestAccountCreation(); break;
                     case "2": Deposit(); break;
                     case "3": Withdraw(); break;
-                    //case "4": ViewBalance(); break;
+                    case "4": ViewBalance(); break;
                     //case "5": SubmitReview(); break;
                     case "0": inUserMenu = false; break;
                     default: Console.WriteLine("Invalid choice."); break;
@@ -242,7 +242,16 @@ namespace MiniBankSystemProjectOverview
             }
         }
 
+        //________view balance (5)___________
+        static void ViewBalance()
+        {
+            int index = GetAccountIndex();
+            if (index == -1) return;//If the account is not found (index == -1), the function terminates immediately without showing anything.
 
+            Console.WriteLine($"Account Number: {accountNumbers[index]}");//This prints the account number corresponding to the indicator entered by the user.
+            Console.WriteLine($"Holder Name: {accountNames[index]}");//This prints the name of the account holder corresponding to this account.
+            Console.WriteLine($"Current Balance: {balances[index]}");//This prints the current balance of the account selected by the user.
+        }
 
 
 
