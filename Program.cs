@@ -178,8 +178,34 @@ namespace MiniBankSystemProjectOverview
 
             Console.WriteLine($"Account created for {name} with Account Number: {newAccountNumber}");
         }
+        //_________Deposit (3)________
+        static void Deposit()
+        {
+            int index = GetAccountIndex();//To get the account index so that we can arrange the lists based on the account number entered by the user
+            if (index == -1) return;//If the function returns -1 (meaning the calculation does not exist), terminate the function immediately using return.
 
-       
+            try
+            {
+                //Prints a message to the user asking him to enter the deposit amount.
+                Console.Write("Enter deposit amount: ");
+                double amount = Convert.ToDouble(Console.ReadLine());//Here it reads the text entered by the user (Console.ReadLine()), then converts it to a decimal number (double) using Convert.ToDouble.
+
+                if (amount <= 0)//Checks that the amount is greater than zero (positive), if the user enters a zero or negative amount, prints an error message and terminates the function immediately.
+                {
+                    Console.WriteLine("Amount must be positive.");
+                    return;
+                }
+
+                balances[index] += amount;//Here the amount entered by the user is added to the account balance in the balances list in the place opposite index.
+                Console.WriteLine("Deposit successful.");
+            }
+            catch
+            {
+                Console.WriteLine("Invalid amount.");
+            }
+        }
+
+
 
 
 
