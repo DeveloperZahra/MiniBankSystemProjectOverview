@@ -96,6 +96,8 @@ namespace MiniBankSystemProjectOverview
                     case "0": inUserMenu = false; break;
                     default: Console.WriteLine("Invalid choice."); break;
                 }
+                Console.WriteLine("press any key");
+                Console.ReadLine();
             }
         }
 
@@ -126,6 +128,8 @@ namespace MiniBankSystemProjectOverview
                     case "0": inAdminMenu = false; break; // this will Eixt the  loop and return
                     default: Console.WriteLine("Invalid choice."); break;
                 }
+                Console.WriteLine("press any key");
+                Console.ReadLine();
             }
         }
         // ========== User features function ==========
