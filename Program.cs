@@ -2,12 +2,20 @@
 using System.Reflection.Metadata;
 using System.Security.Principal;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MiniBankSystemProjectOverview
 {
-    internal class Program
-
+    class Program
     {
+
+        // ____Global lists (parallel)______
+        static List<int> accountNumbers = new List<int>();
+        static List<string> accountNames = new List<string>();
+        static List<double> balances = new List<double>();
+
+        //_______Account number generator_____
+        static int lastAccountNumber;
 
         static Queue<string> createAccountRequests = new Queue<string>(); // format: "Name|NationalID"
         static void Main(string[] args)
@@ -27,7 +35,7 @@ namespace MiniBankSystemProjectOverview
                     Console.WriteLine("1. User Menu");
                     Console.WriteLine("2. Admin Menu");
                     Console.WriteLine("0. Exit the system");
-                    Console.Write(" Please Select Your Option: ");
+                    Console.Write(" Please Select Your Option:\n ");
                     string mainChoice = Console.ReadLine();
 
                     switch (mainChoice)
@@ -101,7 +109,7 @@ namespace MiniBankSystemProjectOverview
 
                 switch (adminChoice)
                 {
-                    //case "1": ProcessNextAccountRequest(); break;
+                    case "1": ProcessNextAccountRequest(); break;
                     //case "2": ViewReviews(); break;
                     //case "3": ViewAllAccounts(); break;
                     //case "4": ViewPendingRequests(); break;
@@ -114,7 +122,7 @@ namespace MiniBankSystemProjectOverview
         //_______________Request account creation (1) ______
         static void RequestAccountCreation()
         {
-            //  Adding  Error Handling
+            //  ____Adding  Error Handling____
             try
             {
                 Console.Write("Enter Your Full name: ");
@@ -142,9 +150,10 @@ namespace MiniBankSystemProjectOverview
                 Console.WriteLine("Warring.. Request is not submited!");
             }
         }
-
+        //_____________Process Next Acount Request(2)____________
         static void ProcessNextAccountRequest()
         {
+            //check if the list of account requests is empty or not. If it is empty, it prints a message "There are no pending account requests", then exits the function directly using return.
             if (createAccountRequests.Count == 0)
             {
                 Console.WriteLine("No pending account requests.");
@@ -152,116 +161,25 @@ namespace MiniBankSystemProjectOverview
             }
 
             //var (name, nationalID) = createAccountRequests.Dequeue();
-            string request = createAccountRequests.Dequeue();
+            string request = createAccountRequests.Dequeue();//This request is a string that takes the first request in the createAccountRequests list, dequeues it, and stores it in the request variable.
+           //Here, the string is split into two parts using the | symbol as a separator.
             string[] parts = request.Split('|');
+           // The resulting array will be parts, where parts[0] = the name and parts[1] = the national ID number.
             string name = parts[0];
             string nationalID = parts[1];
 
-            int newAccountNumber = lastAccountNumber + 1;
+            int newAccountNumber = lastAccountNumber + 1;//This creates a new account number by adding 1 to the last registered account number.
 
-            accountNumbers.Add(newAccountNumber);
+            accountNumbers.Add(newAccountNumber);//to Adds new account to several lists
             accountNames.Add($"{name} ");
             balances.Add(0.0);
 
-            lastAccountNumber = newAccountNumber;
+            lastAccountNumber = newAccountNumber;//The last account number (lastAccountNumber) will be the new account number that was created.
 
             Console.WriteLine($"Account created for {name} with Account Number: {newAccountNumber}");
         }
 
-        static void Deposit()
-        {
-            int index = GetAccountIndex();
-            if (index == -1) return;
-
-            try
-            {
-                Console.Write("Enter deposit amount: ");
-                double amount = Convert.ToDouble(Console.ReadLine());
-
-                if (amount <= 0)
-                {
-                    Console.WriteLine("Amount must be positive.");
-                    return;
-                }
-
-                balances[index] += amount;
-                Console.WriteLine("Deposit successful.");
-            }
-            catch
-            {
-                Console.WriteLine("Invalid amount.");
-            }
-        }
-
-        static void Withdraw()
-        {
-            int index = GetAccountIndex();
-            if (index == -1) return;
-
-            try
-            {
-                Console.Write("Enter withdrawal amount: ");
-                double amount = Convert.ToDouble(Console.ReadLine());
-
-                if (amount <= 0)
-                {
-                    Console.WriteLine("Amount must be positive.");
-                    return;
-                }
-
-                if (balances[index] - amount >= MinimumBalance)
-                {
-                    balances[index] -= amount;
-                    Console.WriteLine("Withdrawal successful.");
-                }
-                else
-                {
-                    Console.WriteLine("Insufficient balance after minimum limit.");
-                }
-            }
-            catch
-            {
-                Console.WriteLine("Invalid amount.");
-            }
-        }
-        static void ViewBalance()
-        {
-            int index = GetAccountIndex();
-            if (index == -1) return;
-
-            Console.WriteLine($"Account Number: {accountNumbers[index]}");
-            Console.WriteLine($"Holder Name: {accountNames[index]}");
-            Console.WriteLine($"Current Balance: {balances[index]}");
-        }
-
-        static void SaveAccountsInformationToFile()
-        {
-            try
-            {
-                using (StreamWriter writer = new StreamWriter(AccountsFilePath))//Through it we create the object to write to the file
-                {
-                    for (int i = 0; i < accountNumbers.Count; i++)
-                    {
-                        string dataLine = $"{accountNumbers[i]},{accountNames[i]},{balances[i]}";
-                        writer.WriteLine(dataLine);
-                    }
-                }
-                Console.WriteLine("Accounts saved successfully.");
-            }
-            catch
-            {
-                Console.WriteLine("Error saving file.");
-            }
-        }
-
-
-
-
-        }
-
-
-
-
+       
 
 
 
@@ -278,7 +196,7 @@ namespace MiniBankSystemProjectOverview
 
         //========== valadition ==========
 
-        // string validation__________________ 
+        // ________string validation__________________ 
         public static string stringOnlyLetterValidation(string word)
         {
             bool IsValid = true;
@@ -315,7 +233,7 @@ namespace MiniBankSystemProjectOverview
             }
             return ValidWord;
         }
-        // validate numeric strting
+        // _________validate numeric strting_________
         public static string StringWithNumberValidation(string word)
         {
             bool IsValid = true;
