@@ -11,11 +11,17 @@ namespace MiniBankSystemProjectOverview
         // _______Constants_________
         const double MinimumBalance = 100.0;
         const string AccountsFilePath = "accounts.txt";
+        const string ReviewsFilePath = "reviews.txt";
 
         // ____Global lists (parallel)______
         static List<int> accountNumbers = new List<int>();
         static List<string> accountNames = new List<string>();
         static List<double> balances = new List<double>();
+
+
+        //_____Stacks & Queues_____________
+
+        static Stack<string> reviewsStack = new Stack<string>();
 
         //_______Account number generator_____
         static int lastAccountNumber;
@@ -86,7 +92,7 @@ namespace MiniBankSystemProjectOverview
                     case "2": Deposit(); break;
                     case "3": Withdraw(); break;
                     case "4": ViewBalance(); break;
-                    //case "5": SubmitReview(); break;
+                    case "5": SubmitReview(); break;
                     case "0": inUserMenu = false; break;
                     default: Console.WriteLine("Invalid choice."); break;
                 }
@@ -253,7 +259,7 @@ namespace MiniBankSystemProjectOverview
             Console.WriteLine($"Holder Name: {accountNames[index]}");//This prints the name of the account holder corresponding to this account.
             Console.WriteLine($"Current Balance: {balances[index]}");//This prints the current balance of the account selected by the user.
         }
-
+        //___________Save Accounts Information To File (6)_______
         static void SaveAccountsInformationToFile()
         {
             try
@@ -273,7 +279,7 @@ namespace MiniBankSystemProjectOverview
                 Console.WriteLine("Error saving file.");
             }
         }
-
+        //__________ Load Accounts Information From File (7)______
         static void LoadAccountsInformationFromFile()
         {
             try
@@ -315,7 +321,7 @@ namespace MiniBankSystemProjectOverview
             }
 
         }
-        //_____________view all accounts_____
+        //_____________view all accounts(8)_____
         static void ViewAllAccounts()//To display data 
         {
             Console.WriteLine("\n--- All Accounts ---");//Prints an address to show the user that all accounts will be displayed.
@@ -324,7 +330,7 @@ namespace MiniBankSystemProjectOverview
                 Console.WriteLine($"{accountNumbers[i]} - {accountNames[i]} - Balance: {balances[i]}");
             }
         }
-
+        //_______________View Pending Requests (9)________
         static void ViewPendingRequests()
         {
             Console.WriteLine("\n--- Pending Account Requests ---");
@@ -341,23 +347,7 @@ namespace MiniBankSystemProjectOverview
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //_________Get Account Index____________
+        //_________Get Account Index(10)____________
         static int GetAccountIndex()
         {
             Console.Write("Enter account number: ");
@@ -381,6 +371,17 @@ namespace MiniBankSystemProjectOverview
             }
         }
 
+        // ===== Reviews & Complaints (Stack) =====
+        //____________Submit Review (1)________________
+
+
+        static void SubmitReview()
+        {
+            Console.Write("Enter your review or complaint: ");//There user is asked to enter his opinion or complaint.
+            string review = Console.ReadLine();//to reads the text typed by the user and saves it in a variable named review.
+            reviewsStack.Push(review);//Push pushes text onto the stack (reviewStack). Stacks operate on a last-in, first-out (LIFO) basis.
+            Console.WriteLine("Thank you! Your feedback has been recorded.");
+        }
 
         //========== valadition ==========
 
