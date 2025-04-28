@@ -450,8 +450,8 @@ namespace MiniBankSystemProjectOverview
         //The purpose of this function is to check the validity of a text string (word) that contains only alphabetic characters (either lowercase or uppercase), and if the string contains anything else (such as numbers or symbols), it is considered invalid.
         public static string stringOnlyLetterValidation(string word)
         {//IsValid: A variable of type bool used to determine whether a string is valid or not, ValidWord: A variable of type string in which the valid word will be stored if it contains only letters.
-            bool IsValid = true;
-            string ValidWord = "";
+            bool IsValid = true;//A logical variable to determine whether a word is valid.
+            string ValidWord = "";//If the word is valid, it will be saved here.
             if (string.IsNullOrEmpty(word) && word.All(char.IsLetter))
             {
                 Console.WriteLine("Input is just empty!");
@@ -463,7 +463,7 @@ namespace MiniBankSystemProjectOverview
                 IsValid = true;
             }
 
-            if (Regex.IsMatch(word, @"^[a-zA-Z]+$"))
+            if (Regex.IsMatch(word, @"^[a-zA-Z]+$"))//A regular expression (Regex) is used to ensure that a word contains only English letters (upper and lower case).
             {
                 Console.WriteLine("Valid: only letters.");
                 IsValid = true;
